@@ -15,7 +15,6 @@ public class ItemPlasmaUpgrade extends Item {
         super();
         setRegistryName("plasmaupgrade");
         setUnlocalizedName(Unreality.MODID + ".plasmaupgrade");
-        setCreativeTab(CreativeTab.instance);
         GameRegistry.register(this);
     }
 

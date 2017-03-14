@@ -1,0 +1,6 @@
+{
+  "parent": "unreality:item/flat",
+  "textures": {
+    "layer0": "unreality:items/plasmaupgrade"
+  }
+}
