@@ -1,6 +1,5 @@
 package totoro.unreality.common.item;
 
-import li.cil.oc.api.CreativeTab;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
