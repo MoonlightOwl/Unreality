@@ -2,6 +2,7 @@ package totoro.unreality.common;
 
 import li.cil.oc.api.CreativeTab;
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.driver.EnvironmentProvider;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -11,7 +12,7 @@ import totoro.unreality.common.item.ItemPlasmaUpgrade;
 
 public class CommonProxy {
     // Items
-    public static ItemPlasmaUpgrade plasmaUpgrade;
+    private static ItemPlasmaUpgrade plasmaUpgrade;
 
     public void preInit(FMLPreInitializationEvent event) {
         plasmaUpgrade = new ItemPlasmaUpgrade();
@@ -19,7 +20,9 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
-        Driver.add(new DriverPlasmaUpgrade());
+        // Drivers
+        DriverPlasmaUpgrade plasmaDriver = new DriverPlasmaUpgrade();
+        Driver.add(plasmaDriver);
     }
 
     public void postInit(FMLPostInitializationEvent event) {
