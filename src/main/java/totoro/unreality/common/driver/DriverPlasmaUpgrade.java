@@ -33,12 +33,12 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
     }
 
 
-    protected Map<String, String> deviceInfo;
+    private Map<String, String> deviceInfo;
 
     @Override
     public Map<String, String> getDeviceInfo() {
         if(deviceInfo == null) {
-            return new HashMap<String, String>() {{
+            deviceInfo = new HashMap<String, String>() {{
                 put(DeviceAttribute.Class, DeviceClass.Generic);
             }};
         }

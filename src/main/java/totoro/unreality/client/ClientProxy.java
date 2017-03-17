@@ -9,20 +9,17 @@ import totoro.unreality.common.UpgradeRenderer;
 
 
 public class ClientProxy extends CommonProxy {
-    // Renderers
-    private static UpgradeRenderer upgradeRenderer;
 
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
+        plasmaUpgrade.initModel();
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        // Renderers
-        upgradeRenderer = new UpgradeRenderer();
-        MinecraftForge.EVENT_BUS.register(upgradeRenderer);
+        MinecraftForge.EVENT_BUS.register(new UpgradeRenderer());
     }
 
     @Override
