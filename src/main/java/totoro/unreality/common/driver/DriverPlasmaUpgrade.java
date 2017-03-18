@@ -19,6 +19,7 @@ import totoro.unreality.common.item.ItemPlasmaUpgrade;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInfo, HostAware {
     private static final int CALL_LIMIT = 15;
 
@@ -40,6 +41,8 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
         if(deviceInfo == null) {
             deviceInfo = new HashMap<String, String>() {{
                 put(DeviceAttribute.Class, DeviceClass.Generic);
+                put(DeviceAttribute.Description, "Weapon upgrade for UT2: Deathmatch event");
+                put(DeviceAttribute.Vendor, "Totoro Corp.");
             }};
         }
         return deviceInfo;
