@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import totoro.unreality.Unreality;
 import totoro.unreality.client.model.ModelPlasmaUpgrade;
+import totoro.unreality.util.ItemUtils;
 import totoro.unreality.util.RenderState;
 
 import java.util.Set;
@@ -55,6 +57,13 @@ public class ItemPlasmaUpgrade extends Item implements UpgradeRenderer {
     @Override
     public void render(ItemStack stack, RobotRenderEvent.MountPoint mountPoint, Robot robot, float pt) {
         if (stack.getItem() instanceof ItemPlasmaUpgrade) {
+            // Get color value from NBT tags
+            int color = 0xff004d;
+            NBTTagCompound tag = ItemUtils.dataTag(stack);
+            if (tag.hasKey("unreality:color")) {
+                color = tag.getInteger("unreality:color");
+            }
+
             // Tweak matrix
             GlStateManager.rotate(mountPoint.rotation.getW(), mountPoint.rotation.getX(),
                     mountPoint.rotation.getY(), mountPoint.rotation.getZ());
@@ -74,7 +83,10 @@ public class ItemPlasmaUpgrade extends Item implements UpgradeRenderer {
             RenderState.disableEntityLighting();
             RenderState.makeItBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-            GlStateManager.color(1, 0, 0.3f);
+            color = color & 0xFFFFFF;
+            GlStateManager.color(((color >> 16) & 0xFF) / 255f,
+                    ((color >> 8) & 0xFF) / 255f,
+                    (color & 0xFF) / 255f);
 
             // Render the beam
             GlStateManager.colorMask(false, false, false, false);

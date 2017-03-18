@@ -19,7 +19,7 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         // Drivers
-        DriverPlasmaUpgrade plasmaDriver = new DriverPlasmaUpgrade();
+        DriverPlasmaUpgrade plasmaDriver = new DriverPlasmaUpgrade(null);
         Driver.add(plasmaDriver);
     }
 
