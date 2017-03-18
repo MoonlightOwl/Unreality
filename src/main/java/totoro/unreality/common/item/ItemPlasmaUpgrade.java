@@ -23,8 +23,8 @@ import java.util.Set;
 
 public class ItemPlasmaUpgrade extends Item implements UpgradeRenderer {
     private ModelPlasmaUpgrade model = new ModelPlasmaUpgrade();
-    ResourceLocation texture;
-    int beamTexture;
+    private ResourceLocation texture;
+    private int beamTexture;
 
 
     public ItemPlasmaUpgrade() {
@@ -32,15 +32,14 @@ public class ItemPlasmaUpgrade extends Item implements UpgradeRenderer {
         setRegistryName("plasmaupgrade");
         setUnlocalizedName(Unreality.MODID + ".plasmaupgrade");
         GameRegistry.register(this);
-
-        texture = new ResourceLocation(Unreality.MODID, "textures/upgrades/gun.png");
-        beamTexture = GlStateManager.generateTexture();
     }
 
     @SideOnly(Side.CLIENT)
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(this, 0,
                 new ModelResourceLocation(getRegistryName(), "inventory"));
+        texture = new ResourceLocation(Unreality.MODID, "textures/upgrades/gun.png");
+        beamTexture = GlStateManager.generateTexture();
     }
 
     @Override
