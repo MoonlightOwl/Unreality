@@ -29,6 +29,7 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
     private static final int CALL_LIMIT = 15;
 
     private int color = 0xff004d;
+    private float yaw = 0, pitch = 0;
     private boolean needsUpdate = false;
 
     private ComponentConnector node;
@@ -64,7 +65,7 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
         return new Object[] { false, "number must be between 0 and 16777215" };
     }
 
-    @Callback(doc = "function(): boolean -- " +
+    @Callback(doc = "function(): boolean, [string] -- " +
             "Sets the color of the plasma-core. Returns true on success, " +
             "false and an error message otherwise", limit = CALL_LIMIT)
     public Object[] fire(Context context, Arguments args) {
@@ -89,12 +90,51 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
         return new Object[] { false, "not enough energy" };
     }
 
+    @Callback(doc = "function(yaw: number, pitch: number): boolean, [string] -- " +
+            "Change weapon angle (yaw in [-20, 20], pitch in [-90, 90] range)",
+            direct = true, limit = CALL_LIMIT)
+    public Object[] turn(Context context, Arguments arguments) {
+        if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_ROTATION_COST)) {
+            float yaw = (float) arguments.checkDouble(0);
+            float pitch = (float) arguments.checkDouble(1);
+            if (yaw < Config.PLASMA_UPGRADE_MIN_YAW || yaw > Config.PLASMA_UPGRADE_MAX_YAW) {
+                throw new IllegalArgumentException("yaw value must be in [" +
+                        Config.PLASMA_UPGRADE_MIN_YAW + ", " +
+                        Config.PLASMA_UPGRADE_MAX_YAW + "] range");
+            }
+            if (pitch < Config.PLASMA_UPGRADE_MIN_PITCH || pitch > Config.PLASMA_UPGRADE_MAX_PITCH) {
+                throw new IllegalArgumentException("pitch value must be in [" +
+                        Config.PLASMA_UPGRADE_MIN_PITCH + ", " +
+                        Config.PLASMA_UPGRADE_MAX_PITCH + "] range");
+            }
+            this.setYaw(yaw);
+            this.setPitch(pitch);
+            return new Object[] { true };
+        }
+        return new Object[] { false, "not enough energy" };
+    }
+
 
     public int getColor() { return color; }
-
     public void setColor(int color) {
         if(this.color != color) {
             this.color = color;
+            needsUpdate = true;
+        }
+    }
+
+    public float getYaw() { return yaw; }
+    public void setYaw(float yaw) {
+        if (this.yaw != yaw) {
+            this.yaw = yaw;
+            needsUpdate = true;
+        }
+    }
+
+    public float getPitch() { return pitch; }
+    public void setPitch(float pitch) {
+        if (this.pitch != pitch) {
+            this.pitch = pitch;
             needsUpdate = true;
         }
     }
@@ -127,16 +167,18 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
     @Override
     public void load(NBTTagCompound nbt) {
         super.load(nbt);
-        if(nbt.hasKey("unreality:color")) {
-            setColor(nbt.getInteger("unreality:color"));
-        }
+        if (nbt.hasKey("unreality:color")) { setColor(nbt.getInteger("unreality:color")); }
+        if (nbt.hasKey("unreality:yaw")) { setYaw(nbt.getFloat("unreality:yaw")); }
+        if (nbt.hasKey("unreality:pitch")) { setPitch(nbt.getFloat("unreality:pitch")); }
         this.needsUpdate = true;
     }
 
     @Override
     public void save(NBTTagCompound nbt) {
         super.save(nbt);
-        nbt.setInteger("unreality:color", this.color);
+        nbt.setInteger("unreality:color", this.getColor());
+        nbt.setFloat("unreality:yaw", this.getYaw());
+        nbt.setFloat("unreality:pitch", this.getPitch());
     }
 
 

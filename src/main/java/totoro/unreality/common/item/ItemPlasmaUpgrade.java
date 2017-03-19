@@ -57,17 +57,20 @@ public class ItemPlasmaUpgrade extends Item implements UpgradeRenderer {
     @Override
     public void render(ItemStack stack, RobotRenderEvent.MountPoint mountPoint, Robot robot, float pt) {
         if (stack.getItem() instanceof ItemPlasmaUpgrade) {
-            // Get color value from NBT tags
-            int color = 0xff004d;
+            // Get data from NBT tags
             NBTTagCompound tag = ItemUtils.dataTag(stack);
-            if (tag.hasKey("unreality:color")) {
-                color = tag.getInteger("unreality:color");
-            }
+            int color = 0xff004d;
+            if (tag.hasKey("unreality:color")) { color = tag.getInteger("unreality:color"); }
+            float yaw = 0, pitch = 0;
+            if (tag.hasKey("unreality:yaw")) { yaw = tag.getFloat("unreality:yaw"); }
+            if (tag.hasKey("unreality:pitch")) { pitch = tag.getFloat("unreality:pitch"); }
 
             // Tweak matrix
             GlStateManager.rotate(mountPoint.rotation.getW(), mountPoint.rotation.getX(),
                     mountPoint.rotation.getY(), mountPoint.rotation.getZ());
             GlStateManager.translate(mountPoint.offset.getX(), mountPoint.offset.getY(), mountPoint.offset.getZ());
+            GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(pitch, 0.0F, 0.0F, 1.0F);
             GlStateManager.pushMatrix();
 
             // Bind texture
