@@ -15,11 +15,12 @@ import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.SoundCategory;
 import totoro.unreality.Config;
 import totoro.unreality.common.Tier;
 import totoro.unreality.common.entity.EntityPlasmaBolt;
 import totoro.unreality.common.item.ItemPlasmaUpgrade;
+import totoro.unreality.common.sounds.Sounds;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,27 +71,29 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
             "false and an error message otherwise", limit = CALL_LIMIT)
     public Object[] fire(Context context, Arguments args) {
         if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_FIRE_COST)) {
+            // Generate and position in the world new entity (plasma bolt)
             EnumFacing facing = ((Robot) host).facing();
             float yaw = this.yaw;
             float mountX = 0, mountY = 0.2f, mountZ = 0;
             switch (facing) {
-                case SOUTH: mountX = -0.3f; mountZ = 0; break;
-                case NORTH: mountX = 0.3f; mountZ = 0; yaw += 180; break;
-                case EAST: mountX = 0; mountZ = 0.3f; yaw += 90; break;
-                case WEST: mountX = 0; mountZ = -0.3f; yaw += 270; break;
+                case SOUTH: mountX = -0.35f; mountZ = 0; break;
+                case NORTH: mountX = 0.35f; mountZ = 0; yaw += 180; break;
+                case EAST: mountX = 0; mountZ = 0.35f; yaw += 90; break;
+                case WEST: mountX = 0; mountZ = -0.35f; yaw += 270; break;
             }
             float accelX = (float) (Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
             float accelY = (float) (Math.sin(Math.toRadians(pitch)));
             float accelZ = (float) (Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
-            EntityPlasmaBolt bolt = new EntityPlasmaBolt(host.world(),
-                    host.xPosition() + accelX + mountX,
-                    host.yPosition() + accelY + mountY,
-                    host.zPosition() + accelZ + mountZ,
-                    accelX, accelY, accelZ);
+            double x = host.xPosition() + accelX + mountX;
+            double y = host.yPosition() + accelY + mountY;
+            double z = host.zPosition() + accelZ + mountZ;
+            EntityPlasmaBolt bolt = new EntityPlasmaBolt(host.world(), x, y, z, accelX, accelY, accelZ);
             bolt.rotationYaw = yaw;
             bolt.rotationPitch = pitch;
             bolt.setColor(this.color);
             host.world().spawnEntityInWorld(bolt);
+            // Play blast sound
+            bolt.playSound(Sounds.Blast, 1.0f, 1.0f);
             return new Object[] { true };
         }
         return new Object[] { false, "not enough energy" };

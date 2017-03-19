@@ -1,6 +1,5 @@
 package totoro.unreality.common;
 
-import li.cil.oc.api.CreativeTab;
 import li.cil.oc.api.Driver;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -9,27 +8,26 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import totoro.unreality.Unreality;
 import totoro.unreality.common.driver.DriverPlasmaUpgrade;
 import totoro.unreality.common.entity.EntityPlasmaBolt;
-import totoro.unreality.common.item.ItemPlasmaUpgrade;
+import totoro.unreality.common.item.Items;
+import totoro.unreality.common.sounds.Sounds;
 
 
 public class CommonProxy {
-    // Items
-    protected static ItemPlasmaUpgrade plasmaUpgrade;
-
     public void preInit(FMLPreInitializationEvent event) {
-        plasmaUpgrade = new ItemPlasmaUpgrade();
         EntityRegistry.registerModEntity(EntityPlasmaBolt.class, "unreality:plasma",
                 2017, Unreality.instance,
                 80, 1, true);
+        Items.preInit();
     }
 
     public void init(FMLInitializationEvent event) {
-        // Drivers
         DriverPlasmaUpgrade plasmaDriver = new DriverPlasmaUpgrade(null);
         Driver.add(plasmaDriver);
+        Items.init();
+        Sounds.init();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        plasmaUpgrade.setCreativeTab(CreativeTab.instance);
+        Items.postInit();
     }
 }

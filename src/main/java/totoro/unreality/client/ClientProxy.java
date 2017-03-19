@@ -7,13 +7,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import totoro.unreality.client.renderer.RenderFactoryPlasmaBolt;
 import totoro.unreality.common.CommonProxy;
 import totoro.unreality.common.entity.EntityPlasmaBolt;
+import totoro.unreality.common.item.Items;
 
 
 public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
-        plasmaUpgrade.initModel();
+        Items.preInitClient();
         RenderingRegistry.registerEntityRenderingHandler(EntityPlasmaBolt.class,
                 RenderFactoryPlasmaBolt.Instance);
     }

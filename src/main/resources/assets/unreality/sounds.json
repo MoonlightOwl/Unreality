@@ -1,0 +1,9 @@
+{
+  "blast": {
+    "category": "block",
+    "sounds": [
+      "unreality:blast_01",
+      "unreality:blast_02"
+    ]
+  }
+}
