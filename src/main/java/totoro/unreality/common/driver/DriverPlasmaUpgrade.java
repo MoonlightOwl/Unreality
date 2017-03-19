@@ -50,7 +50,8 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
     }
 
     @Callback(doc = "function(color: number): boolean -- " +
-            "Sets the color of the plasma-core. Returns true on success, false and an error message otherwise", direct = true)
+            "Sets the color of the plasma-core. Returns true on success, " +
+            "false and an error message otherwise", direct = true)
     public Object[] setColor(Context context, Arguments args) {
         int color = args.checkInteger(0);
         if(color >= 0 && color <= 0xFFFFFF) {
@@ -64,7 +65,8 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
     }
 
     @Callback(doc = "function(): boolean -- " +
-            "Sets the color of the plasma-core. Returns true on success, false and an error message otherwise", direct = true)
+            "Sets the color of the plasma-core. Returns true on success, " +
+            "false and an error message otherwise", limit = CALL_LIMIT)
     public Object[] fire(Context context, Arguments args) {
         if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_FIRE_COST)) {
             EnumFacing facing = ((Robot) host).facing();

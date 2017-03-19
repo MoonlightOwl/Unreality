@@ -41,7 +41,8 @@ public class EntityPlasmaBolt extends EntityProjectile {
     @Override
     protected void onImpact(@Nonnull RayTraceResult result) {
         if (!this.worldObj.isRemote) {
-            if (this.worldObj.getBlockState(result.getBlockPos()).getBlock()
+            BlockPos collision = result.getBlockPos();
+            if (collision != null && this.worldObj.getBlockState(collision).getBlock()
                     .getRegistryName().toString().equals("opencomputers:robot")) {
                 this.worldObj.destroyBlock(result.getBlockPos(), false);
                 this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ,
