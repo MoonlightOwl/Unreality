@@ -11,6 +11,6 @@ public class RenderFactoryPlasmaBolt implements IRenderFactory<EntityPlasmaBolt>
 
     @Override
     public Render<? super EntityPlasmaBolt> createRenderFor(RenderManager manager) {
-        return new RenderPlasmaBolt(manager, 0.5f);
+        return new RenderPlasmaBolt(manager, 1);
     }
 }

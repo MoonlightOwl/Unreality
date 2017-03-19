@@ -71,18 +71,24 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
     public Object[] fire(Context context, Arguments args) {
         if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_FIRE_COST)) {
             EnumFacing facing = ((Robot) host).facing();
-            Vec3i direction = facing.getDirectionVec();
-            EntityPlasmaBolt bolt = new EntityPlasmaBolt(host.world(),
-                    host.xPosition() + direction.getX(),
-                    host.yPosition() + direction.getY(),
-                    host.zPosition() + direction.getZ(),
-                    direction.getX(), direction.getY(), direction.getZ());
+            float yaw = this.yaw;
+            float mountX = 0, mountY = 0.2f, mountZ = 0;
             switch (facing) {
-                case NORTH: bolt.rotationYaw = 0; break;
-                case SOUTH: bolt.rotationYaw = 180; break;
-                case WEST: bolt.rotationYaw = 90; break;
-                case EAST: bolt.rotationYaw = 270; break;
+                case SOUTH: mountX = -0.3f; mountZ = 0; break;
+                case NORTH: mountX = 0.3f; mountZ = 0; yaw += 180; break;
+                case EAST: mountX = 0; mountZ = 0.3f; yaw += 90; break;
+                case WEST: mountX = 0; mountZ = -0.3f; yaw += 270; break;
             }
+            float accelX = (float) (Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
+            float accelY = (float) (Math.sin(Math.toRadians(pitch)));
+            float accelZ = (float) (Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
+            EntityPlasmaBolt bolt = new EntityPlasmaBolt(host.world(),
+                    host.xPosition() + accelX + mountX,
+                    host.yPosition() + accelY + mountY,
+                    host.zPosition() + accelZ + mountZ,
+                    accelX, accelY, accelZ);
+            bolt.rotationYaw = yaw;
+            bolt.rotationPitch = pitch;
             bolt.setColor(this.color);
             host.world().spawnEntityInWorld(bolt);
             return new Object[] { true };

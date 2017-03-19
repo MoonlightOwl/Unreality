@@ -30,12 +30,7 @@ public class RenderPlasmaBolt extends Render<EntityPlasmaBolt> {
         int color = entity.getColor();
 
         GlStateManager.pushMatrix();
-        this.bindEntityTexture(entity);
         GlStateManager.translate((float)x, (float)y, (float)z);
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.scale(this.scale, this.scale, this.scale);
-        GlStateManager.rotate(entity.rotationYaw, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(entity.rotationPitch, 0.0F, 0.0F, 1.0F);
 
         GlStateManager.enableColorMaterial();
         GlStateManager.enableOutlineMode(this.getTeamColor(entity));
@@ -50,13 +45,13 @@ public class RenderPlasmaBolt extends Render<EntityPlasmaBolt> {
 
         // Render the model
         GlStateManager.bindTexture(texture);
+        model.setRotation(entity.rotationYaw, entity.rotationPitch);
         model.render();
 
         // Unset effects
         GlStateManager.disableOutlineMode();
         GlStateManager.disableColorMaterial();
 
-        GlStateManager.disableRescaleNormal();
         GlStateManager.popMatrix();
         RenderState.disableBlend();
         RenderState.enableEntityLighting();
