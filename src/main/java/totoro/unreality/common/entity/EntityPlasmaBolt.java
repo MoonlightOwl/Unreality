@@ -59,7 +59,7 @@ public class EntityPlasmaBolt extends EntityProjectile {
     }
 
     protected float getMotionFactor() {
-        return 1.5f;
+        return 1.1f;
     }
 
     @Nonnull

@@ -60,9 +60,9 @@ public abstract class EntityProjectile extends Entity implements IEntityAddition
         this.setSize(1.0F, 1.0F);
         this.setPosition(x, y, z);
         double d0 = (double) MathHelper.sqrt_double(accelX * accelX + accelY * accelY + accelZ * accelZ);
-        this.accelerationX = accelX / d0 * 0.1D;
-        this.accelerationY = accelY / d0 * 0.1D;
-        this.accelerationZ = accelZ / d0 * 0.1D;
+        this.accelerationX = accelX / d0 * 0.2D;
+        this.accelerationY = accelY / d0 * 0.2D;
+        this.accelerationZ = accelZ / d0 * 0.2D;
     }
 
     /**
