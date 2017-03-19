@@ -14,8 +14,11 @@ import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3i;
 import totoro.unreality.Config;
 import totoro.unreality.common.Tier;
+import totoro.unreality.common.entity.EntityPlasmaBolt;
 import totoro.unreality.common.item.ItemPlasmaUpgrade;
 
 import java.util.HashMap;
@@ -40,13 +43,13 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
     }
 
 
-    @Callback(doc = "function(): string; " +
+    @Callback(doc = "function(): string -- " +
             "Will return test string", direct = true, limit = CALL_LIMIT)
     public Object[] test(Context context, Arguments arguments) {
         return new Object[] { "Hello UT!" };
     }
 
-    @Callback(doc = "function(color:number):boolean; " +
+    @Callback(doc = "function(color: number): boolean -- " +
             "Sets the color of the plasma-core. Returns true on success, false and an error message otherwise", direct = true)
     public Object[] setColor(Context context, Arguments args) {
         int color = args.checkInteger(0);
@@ -58,6 +61,30 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
             return new Object[] { false, "not enough energy" };
         }
         return new Object[] { false, "number must be between 0 and 16777215" };
+    }
+
+    @Callback(doc = "function(): boolean -- " +
+            "Sets the color of the plasma-core. Returns true on success, false and an error message otherwise", direct = true)
+    public Object[] fire(Context context, Arguments args) {
+        if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_FIRE_COST)) {
+            EnumFacing facing = ((Robot) host).facing();
+            Vec3i direction = facing.getDirectionVec();
+            EntityPlasmaBolt bolt = new EntityPlasmaBolt(host.world(),
+                    host.xPosition() + direction.getX(),
+                    host.yPosition() + direction.getY(),
+                    host.zPosition() + direction.getZ(),
+                    direction.getX(), direction.getY(), direction.getZ());
+            switch (facing) {
+                case NORTH: bolt.rotationYaw = 0; break;
+                case SOUTH: bolt.rotationYaw = 180; break;
+                case WEST: bolt.rotationYaw = 90; break;
+                case EAST: bolt.rotationYaw = 270; break;
+            }
+            bolt.setColor(this.color);
+            host.world().spawnEntityInWorld(bolt);
+            return new Object[] { true };
+        }
+        return new Object[] { false, "not enough energy" };
     }
 
 

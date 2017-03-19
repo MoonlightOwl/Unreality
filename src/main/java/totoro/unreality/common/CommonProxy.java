@@ -5,7 +5,10 @@ import li.cil.oc.api.Driver;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import totoro.unreality.Unreality;
 import totoro.unreality.common.driver.DriverPlasmaUpgrade;
+import totoro.unreality.common.entity.EntityPlasmaBolt;
 import totoro.unreality.common.item.ItemPlasmaUpgrade;
 
 
@@ -15,6 +18,9 @@ public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
         plasmaUpgrade = new ItemPlasmaUpgrade();
+        EntityRegistry.registerModEntity(EntityPlasmaBolt.class, "unreality:plasma",
+                2017, Unreality.instance,
+                80, 1, true);
     }
 
     public void init(FMLInitializationEvent event) {

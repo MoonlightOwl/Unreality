@@ -1,99 +1,44 @@
 package totoro.unreality.common.entity;
 
-import li.cil.oc.api.internal.Robot;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
+import net.minecraft.entity.EntityAreaEffectCloud;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 
-public class EntityPlasmaBolt extends Entity {
-    private static DamageSource plasma = new DamageSource("plasma");
-    static { plasma.setProjectile(); }
+public class EntityPlasmaBolt extends EntityProjectile {
+    public EntityPlasmaBolt(World worldIn) {
+        super(worldIn);
+        this.setSize(0.3125F, 0.3125F);
+    }
 
-    private static final DataParameter<Float> YAW = EntityDataManager.createKey(EntityPlasmaBolt.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> PITCH = EntityDataManager.createKey(EntityPlasmaBolt.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityPlasmaBolt.class, DataSerializers.FLOAT);
-
-    private int life = 600;
-    private float yaw = 0.0F;
-    private float pitch = 0.0F;
-    private float damage = 0.0F;
-
-    public EntityPlasmaBolt(World world) {
-        super(world);
-        setSize(0.5F, 0.5F);
+    public EntityPlasmaBolt(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
+        super(worldIn, x, y, z, accelX, accelY, accelZ);
+        this.setSize(0.3125F, 0.3125F);
     }
 
     @Override
-    protected void entityInit() {
-        this.dataManager.register(YAW, 0.0F);
-        this.dataManager.register(PITCH, 0.0F);
-    }
+    protected void onImpact(@Nonnull RayTraceResult result) {
+        if (!this.worldObj.isRemote) {
+            EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.worldObj, this.posX, this.posY, this.posZ);
+            entityareaeffectcloud.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
+            entityareaeffectcloud.setRadius(1.0F);
+            entityareaeffectcloud.setDuration(5);
+            entityareaeffectcloud.setRadiusPerTick((2.0F - entityareaeffectcloud.getRadius()) / (float)entityareaeffectcloud.getDuration());
 
-    public void setHeading(float yaw, float pitch) {
-        this.yaw = yaw;
-        this.pitch = pitch;
-        this.motionX = Math.sin(yaw) * Math.cos(pitch);
-        this.motionY = Math.sin(pitch);
-        this.motionZ = Math.cos(yaw) * Math.cos(pitch);
-        this.dataManager.set(YAW, yaw);
-        this.dataManager.set(PITCH, pitch);
-    }
-
-    public void setDamage(float damage) {
-        this.damage = damage;
-        this.dataManager.set(DAMAGE, damage);
-    }
-
-
-    protected void readEntityFromNBT(NBTTagCompound tag)
-    {
-        this.yaw = tag.getFloat("yaw");
-        this.pitch = tag.getFloat("pitch");
-    }
-
-    protected void writeEntityToNBT(NBTTagCompound tag)
-    {
-        tag.setFloat("yaw", this.yaw);
-        tag.setFloat("pitch", this.pitch);
-    }
-
-
-    protected boolean canTriggerWalking() { return false; }
-
-    @SideOnly(Side.CLIENT)
-    protected float getShadowSize() {
-        return 0.0F;
-    }
-
-
-    public void onUpdate() {
-        if (life < 0) this.isDead = true;
-
-        // TODO: check actual robot block class name
-        if ((!this.worldObj.isAirBlock(getPosition()))
-                && (!(this.worldObj.getBlockState(getPosition()).getBlock() instanceof Robot))) {
-            this.isDead = true;
+            this.worldObj.spawnEntityInWorld(entityareaeffectcloud);
+            this.setDead();
         }
-
-        this.yaw = this.dataManager.get(YAW);
-        this.pitch = this.dataManager.get(PITCH);
-        this.damage = this.dataManager.get(DAMAGE);
-
-        this.posX += this.motionX;
-        this.posY += this.motionY;
-        this.posZ += this.motionZ;
-        setPosition(this.posX, this.posY, this.posZ);
-
-        super.onUpdate();
     }
 
-    public float getYaw() { return yaw; }
-    public float getPitch() { return pitch; }
+    protected float getMotionFactor() {
+        return 1.5f;
+    }
+
+    @Nonnull
+    protected EnumParticleTypes getParticleType() {
+        return EnumParticleTypes.PORTAL;
+    }
 }
