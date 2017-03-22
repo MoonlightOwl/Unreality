@@ -27,6 +27,7 @@ public class Unreality {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        Config.load(event.getSuggestedConfigurationFile());
         proxy.preInit(event);
     }
 
