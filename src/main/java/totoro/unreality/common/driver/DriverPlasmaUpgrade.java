@@ -15,7 +15,6 @@ import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import totoro.unreality.Config;
 import totoro.unreality.common.Tier;
 import totoro.unreality.common.entity.EntityPlasmaBolt;

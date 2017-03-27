@@ -13,7 +13,7 @@ import totoro.unreality.common.CommonProxy;
 @Mod(modid = Unreality.MODID, version = Unreality.VERSION)
 public class Unreality {
     public static final String MODID = "unreality";
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.1.1";
 
     @SidedProxy(
             clientSide = "totoro.unreality.client.ClientProxy",

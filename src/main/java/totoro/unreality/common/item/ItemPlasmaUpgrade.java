@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import totoro.unreality.Unreality;
 import totoro.unreality.client.model.ModelPlasmaUpgrade;
-import totoro.unreality.util.ItemUtils;
+import totoro.unreality.util.Helper;
 import totoro.unreality.util.RenderState;
 
 import java.util.Set;
@@ -58,7 +58,7 @@ public class ItemPlasmaUpgrade extends Item implements UpgradeRenderer {
     public void render(ItemStack stack, RobotRenderEvent.MountPoint mountPoint, Robot robot, float pt) {
         if (stack.getItem() instanceof ItemPlasmaUpgrade) {
             // Get data from NBT tags
-            NBTTagCompound tag = ItemUtils.dataTag(stack);
+            NBTTagCompound tag = Helper.dataTag(stack);
             int color = 0xff004d;
             if (tag.hasKey("unreality:color")) { color = tag.getInteger("unreality:color"); }
             float yaw = 0, pitch = 0;

@@ -20,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 
+@SuppressWarnings("WeakerAccess")
 public abstract class EntityProjectile extends Entity implements IEntityAdditionalSpawnData {
     private int xTile = -1;
     private int yTile = -1;
@@ -94,7 +95,11 @@ public abstract class EntityProjectile extends Entity implements IEntityAddition
                 ++this.ticksInAir;
             }
 
-            RayTraceResult raytraceresult = ProjectileHelper.forwardsRaycast(this, true, this.ticksInAir >= 25, null);
+            @SuppressWarnings("ConstantConditions")
+            RayTraceResult raytraceresult =
+                    ProjectileHelper.forwardsRaycast(this, true,
+                            this.ticksInAir >= 25, null);
+            //noinspection ConstantConditions
             if (raytraceresult != null) {
                 this.onImpact(raytraceresult);
             }
@@ -106,8 +111,11 @@ public abstract class EntityProjectile extends Entity implements IEntityAddition
 
             if (this.isInWater()) {
                 for (int i = 0; i < 4; ++i) {
-                    float f1 = 0.25F;
-                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
+                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE,
+                            this.posX - this.motionX * 0.25D,
+                            this.posY - this.motionY * 0.25D,
+                            this.posZ - this.motionZ * 0.25D,
+                            this.motionX, this.motionY, this.motionZ);
                 }
 
                 f = 0.8F;
@@ -148,15 +156,16 @@ public abstract class EntityProjectile extends Entity implements IEntityAddition
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
-    public void writeEntityToNBT(NBTTagCompound compound) {
+    @SuppressWarnings("ConstantConditions")
+    public void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
         compound.setInteger("xTile", this.xTile);
         compound.setInteger("yTile", this.yTile);
         compound.setInteger("zTile", this.zTile);
-        ResourceLocation resourcelocation = (ResourceLocation)Block.REGISTRY.getNameForObject(this.inTile);
+        ResourceLocation resourcelocation = Block.REGISTRY.getNameForObject(this.inTile);
         compound.setString("inTile", resourcelocation == null ? "" : resourcelocation.toString());
         compound.setByte("inGround", (byte)(this.inGround ? 1 : 0));
-        compound.setTag("direction", this.newDoubleNBTList(new double[] {this.motionX, this.motionY, this.motionZ}));
-        compound.setTag("power", this.newDoubleNBTList(new double[] {this.accelerationX, this.accelerationY, this.accelerationZ}));
+        compound.setTag("direction", this.newDoubleNBTList(this.motionX, this.motionY, this.motionZ));
+        compound.setTag("power", this.newDoubleNBTList(this.accelerationX, this.accelerationY, this.accelerationZ));
         compound.setInteger("life", this.ticksAlive);
         compound.setInteger("unreality:color", this.color);
     }
@@ -164,7 +173,7 @@ public abstract class EntityProjectile extends Entity implements IEntityAddition
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readEntityFromNBT(NBTTagCompound compound) {
+    public void readEntityFromNBT(@Nonnull NBTTagCompound compound) {
         this.xTile = compound.getInteger("xTile");
         this.yTile = compound.getInteger("yTile");
         this.zTile = compound.getInteger("zTile");

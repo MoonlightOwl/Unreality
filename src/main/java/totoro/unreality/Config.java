@@ -3,7 +3,7 @@ package totoro.unreality;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
-import java.util.ArrayList;
+
 
 @SuppressWarnings("WeakerAccess")
 public class Config {
@@ -17,7 +17,9 @@ public class Config {
     public static float PLASMA_UPGRADE_MIN_PITCH = -90;
     public static float PLASMA_UPGRADE_MAX_PITCH = 90;
     // Physics
-    public static String[] PLASMA_PERMEABLE_BLOCKS;
+    public static String[] PLASMA_PERMEABLE_BLOCKS, PLASMA_EXPLOSIVE_BLOCKS;
+    public static double PLASMA_EXPLOSION_RADIUS = 1;
+
 
     public static void load(File file) {
         Configuration config = new Configuration(file);
@@ -28,8 +30,8 @@ public class Config {
                 "fireCost", 0.2,
                 "How much energy will cost to make one shot").getDouble();
         PLASMA_UPGRADE_ROTATION_COST = config.get("plasma",
-                "rotationCost", 0.2, "" +
-                        "How much energy will cost to rotate the gun").getDouble();
+                "rotationCost", 0.2,
+                "How much energy will cost to rotate the gun").getDouble();
 
         PLASMA_UPGRADE_MIN_YAW = config.getFloat("minYaw",
                 "plasma", -20, -180, 180,
@@ -47,6 +49,13 @@ public class Config {
         PLASMA_PERMEABLE_BLOCKS = config.getStringList("permeable", "plasma",
                 new String[] {"minecraft:glass"},
                 "Plasma will pass through these blocks, without collision.");
+        PLASMA_EXPLOSIVE_BLOCKS = config.getStringList("explosive", "plasma",
+                new String[] {"opencomputers:robot", "minecraft:sand"},
+                "These block will explode after contact with plasma.");
+
+        PLASMA_EXPLOSION_RADIUS = config.get("plasma",
+                "explosionRadius", 1,
+                "The size of plasma explosion.").getDouble();
 
         if (config.hasChanged())
             config.save();
