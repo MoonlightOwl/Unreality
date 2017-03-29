@@ -10,10 +10,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import totoro.unreality.common.CommonProxy;
 
 
+@SuppressWarnings("WeakerAccess")
 @Mod(modid = Unreality.MODID, version = Unreality.VERSION)
 public class Unreality {
     public static final String MODID = "unreality";
-    public static final String VERSION = "0.1.1";
+    public static final String VERSION = "0.1.2";
 
     @SidedProxy(
             clientSide = "totoro.unreality.client.ClientProxy",
