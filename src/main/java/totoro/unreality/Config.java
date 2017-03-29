@@ -19,6 +19,8 @@ public class Config {
     // Physics
     public static String[] PLASMA_PERMEABLE_BLOCKS, PLASMA_EXPLOSIVE_BLOCKS;
     public static double PLASMA_EXPLOSION_RADIUS = 1;
+    // API
+    public static long PLASMA_UPGRADE_FIRE_DELAY = 200;
 
 
     public static void load(File file) {
@@ -56,6 +58,10 @@ public class Config {
         PLASMA_EXPLOSION_RADIUS = config.get("plasma",
                 "explosionRadius", 1,
                 "The size of plasma explosion.").getDouble();
+
+        PLASMA_UPGRADE_FIRE_DELAY = config.getInt("fireDelay",
+                "plasma", 200, 0, Integer.MAX_VALUE,
+                "Cooldown after each shot (milliseconds).");
 
         if (config.hasChanged())
             config.save();

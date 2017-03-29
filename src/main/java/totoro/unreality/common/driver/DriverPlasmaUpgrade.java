@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInfo, HostAware {
     private static final int CALL_LIMIT = 15;
+    private static final int FIRE_CALL_LIMIT = 1;
 
     private int color = 0xff004d;
     private float yaw = 0, pitch = 0;
@@ -67,7 +68,7 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
 
     @Callback(doc = "function(): boolean, [string] -- " +
             "Sets the color of the plasma-core. Returns true on success, " +
-            "false and an error message otherwise", limit = CALL_LIMIT)
+            "false and an error message otherwise", limit = FIRE_CALL_LIMIT)
     public Object[] fire(Context context, Arguments args) {
         if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_FIRE_COST)) {
             // Generate and position in the world new entity (plasma bolt)
@@ -93,6 +94,10 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
             host.world().spawnEntityInWorld(bolt);
             // Play blast sound
             bolt.playSound(Sounds.Blast, 1.0f, 1.0f);
+            // Cooldown
+            try {
+                Thread.sleep(Config.PLASMA_UPGRADE_FIRE_DELAY);
+            } catch (InterruptedException e) {}
             return new Object[] { true };
         }
         return new Object[] { false, "not enough energy" };
@@ -100,7 +105,7 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
 
     @Callback(doc = "function(yaw: number, pitch: number): boolean, [string] -- " +
             "Change weapon angle (yaw in [-20, 20], pitch in [-90, 90] range)",
-            direct = true, limit = CALL_LIMIT)
+            direct = true, limit = FIRE_CALL_LIMIT)
     public Object[] turn(Context context, Arguments arguments) {
         if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_ROTATION_COST)) {
             float yaw = (float) arguments.checkDouble(0);
