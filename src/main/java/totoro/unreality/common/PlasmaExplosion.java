@@ -3,6 +3,7 @@ package totoro.unreality.common;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -13,9 +14,16 @@ import java.util.ArrayList;
 @SuppressWarnings("WeakerAccess")
 public class PlasmaExplosion {
 
-    public static void explode(World world, double x, double y, double z, double rad) {
-        world.playSound(null, x, y, z,
-                SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F,
+    public static void bigExplode(World world, double x, double y, double z, double rad) {
+        explode(world, x, y, z, rad, SoundEvents.ENTITY_GENERIC_EXPLODE, EnumParticleTypes.LAVA);
+    }
+    public static void smallExplode(World world, double x, double y, double z, double rad) {
+        explode(world, x, y, z, rad, SoundEvents.ENTITY_FIREWORK_BLAST_FAR, EnumParticleTypes.SPELL_INSTANT);
+    }
+
+    public static void explode(World world, double x, double y, double z, double rad,
+                               SoundEvent sound, EnumParticleTypes particles) {
+        world.playSound(null, x, y, z, sound, SoundCategory.BLOCKS, 4.0F,
                 (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
         if (world.isRemote) {
@@ -54,9 +62,24 @@ public class PlasmaExplosion {
                 //world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL,
                 //        (d0 + x) / 2.0D, (d1 + y) / 2.0D, (d2 + z) / 2.0D, d3, d4, d5);
                 if (world.rand.nextBoolean())
-                    world.spawnParticle(EnumParticleTypes.LAVA, d0, d1, d2, d3, d4, d5);
+                    world.spawnParticle(particles, d0, d1, d2, d3, d4, d5);
                 else
                     world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
+            }
+        }
+    }
+
+    public static void miss(World world, double x, double y, double z) {
+        world.playSound(null, x, y, z, SoundEvents.BLOCK_ANVIL_HIT, SoundCategory.BLOCKS, 1.0F,
+                (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+
+        if (world.isRemote) {
+            for(int i = 0; i < 5; i++) {
+                world.spawnParticle(EnumParticleTypes.CLOUD,
+                        x + world.rand.nextFloat()-0.5f,
+                        y + world.rand.nextFloat()-0.5f,
+                        z + world.rand.nextFloat()-0.5f,
+                        0, 0, 0);
             }
         }
     }

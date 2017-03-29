@@ -50,15 +50,14 @@ public class EntityPlasmaBolt extends EntityProjectile {
             if (!Helper.contains(Config.PLASMA_PERMEABLE_BLOCKS, blockname)) {
                 if (Helper.contains(Config.PLASMA_EXPLOSIVE_BLOCKS, blockname)) {
                     this.worldObj.destroyBlock(result.getBlockPos(), false);
-                    PlasmaExplosion.explode(this.worldObj,
+                    PlasmaExplosion.bigExplode(this.worldObj,
                             this.posX, this.posY, this.posZ, Config.PLASMA_EXPLOSION_RADIUS);
+                } else if (Helper.contains(Config.PLASMA_DESTRUCTIBLE_BLOCKS, blockname)) {
+                    this.worldObj.destroyBlock(result.getBlockPos(), false);
+                    PlasmaExplosion.smallExplode(this.worldObj,
+                            this.posX, this.posY, this.posZ, Config.PLASMA_EXPLOSION_RADIUS / 2);
                 } else {
-                    EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.worldObj, this.posX, this.posY, this.posZ);
-                    entityareaeffectcloud.setParticle(EnumParticleTypes.CLOUD);
-                    entityareaeffectcloud.setRadius(1.0F);
-                    entityareaeffectcloud.setDuration(5);
-                    entityareaeffectcloud.setRadiusPerTick((2.0F - entityareaeffectcloud.getRadius()) / (float)entityareaeffectcloud.getDuration());
-                    this.worldObj.spawnEntityInWorld(entityareaeffectcloud);
+                    PlasmaExplosion.miss(this.worldObj, this.posX, this.posY, this.posZ);
                 }
                 this.setDead();
             }

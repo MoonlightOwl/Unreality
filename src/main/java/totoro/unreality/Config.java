@@ -17,7 +17,7 @@ public class Config {
     public static float PLASMA_UPGRADE_MIN_PITCH = -90;
     public static float PLASMA_UPGRADE_MAX_PITCH = 90;
     // Physics
-    public static String[] PLASMA_PERMEABLE_BLOCKS, PLASMA_EXPLOSIVE_BLOCKS;
+    public static String[] PLASMA_PERMEABLE_BLOCKS, PLASMA_EXPLOSIVE_BLOCKS, PLASMA_DESTRUCTIBLE_BLOCKS;
     public static double PLASMA_EXPLOSION_RADIUS = 1;
     // API
     public static long PLASMA_UPGRADE_FIRE_DELAY = 200;
@@ -54,6 +54,9 @@ public class Config {
         PLASMA_EXPLOSIVE_BLOCKS = config.getStringList("explosive", "plasma",
                 new String[] {"opencomputers:robot", "minecraft:sand"},
                 "These block will explode after contact with plasma.");
+        PLASMA_DESTRUCTIBLE_BLOCKS = config.getStringList("destructible", "plasma",
+                new String[] {"minecraft:chest"},
+                "These block will break after contact with plasma.");
 
         PLASMA_EXPLOSION_RADIUS = config.get("plasma",
                 "explosionRadius", 1,
