@@ -68,7 +68,7 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
 
     @Callback(doc = "function(): boolean, [string] -- " +
             "Sets the color of the plasma-core. Returns true on success, " +
-            "false and an error message otherwise", limit = FIRE_CALL_LIMIT)
+            "false and an error message otherwise")
     public Object[] fire(Context context, Arguments args) {
         if(node.tryChangeBuffer(-Config.PLASMA_UPGRADE_FIRE_COST)) {
             // Generate and position in the world new entity (plasma bolt)
@@ -95,9 +95,7 @@ public class DriverPlasmaUpgrade extends ManagedEnvironment implements DeviceInf
             // Play blast sound
             bolt.playSound(Sounds.Blast, 1.0f, 1.0f);
             // Cooldown
-            try {
-                Thread.sleep(Config.PLASMA_UPGRADE_FIRE_DELAY);
-            } catch (InterruptedException e) {}
+            context.pause(Config.PLASMA_UPGRADE_FIRE_DELAY);
             return new Object[] { true };
         }
         return new Object[] { false, "not enough energy" };
