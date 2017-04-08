@@ -1,0 +1,9 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "bottom": "unreality:blocks/generic_bottom",
+    "top": "unreality:blocks/explosive_top",
+    "side": "unreality:blocks/explosive_side",
+    "front": "unreality:blocks/explosive_front"
+  }
+}

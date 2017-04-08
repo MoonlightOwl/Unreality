@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import totoro.unreality.client.renderer.RenderFactoryPlasmaBolt;
 import totoro.unreality.common.CommonProxy;
+import totoro.unreality.common.block.Blocks;
 import totoro.unreality.common.entity.EntityPlasmaBolt;
 import totoro.unreality.common.item.Items;
 
@@ -22,6 +23,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        Blocks.initClient();
     }
 
     @Override
