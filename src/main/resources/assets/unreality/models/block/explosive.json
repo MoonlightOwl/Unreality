@@ -1,9 +1,19 @@
 {
-  "parent": "block/orientable",
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
   "textures": {
-    "bottom": "unreality:blocks/generic_bottom",
-    "top": "unreality:blocks/explosive_top",
-    "side": "unreality:blocks/explosive_side",
-    "front": "unreality:blocks/explosive_front"
+    "particle": "unreality:blocks/explosive_side",
+    "down": "unreality:blocks/generic_bottom",
+    "up": "unreality:blocks/explosive_top",
+    "north": "unreality:blocks/explosive_front",
+    "east": "unreality:blocks/explosive_side",
+    "south": "unreality:blocks/explosive_side",
+    "west": "unreality:blocks/explosive_side"
   }
 }
