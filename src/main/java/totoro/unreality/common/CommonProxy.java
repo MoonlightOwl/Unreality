@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import totoro.unreality.Unreality;
 import totoro.unreality.common.block.Blocks;
 import totoro.unreality.common.driver.DriverPlasmaUpgrade;
+import totoro.unreality.common.entity.EntityExplosivePrimed;
 import totoro.unreality.common.entity.EntityPlasmaBolt;
 import totoro.unreality.common.item.Items;
 import totoro.unreality.common.sounds.Sounds;
@@ -17,6 +18,9 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         EntityRegistry.registerModEntity(EntityPlasmaBolt.class, "unreality:plasma",
                 2017, Unreality.instance,
+                80, 1, true);
+        EntityRegistry.registerModEntity(EntityExplosivePrimed.class, "unreality:explosivePrimed",
+                2018, Unreality.instance,
                 80, 1, true);
         Items.preInit();
         Blocks.preInit();

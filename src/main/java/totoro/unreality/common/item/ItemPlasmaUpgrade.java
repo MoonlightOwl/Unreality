@@ -23,6 +23,7 @@ import totoro.unreality.util.RenderState;
 import java.util.Set;
 
 
+@SuppressWarnings("WeakerAccess")
 public class ItemPlasmaUpgrade extends Item implements UpgradeRenderer {
     private ModelPlasmaUpgrade model = new ModelPlasmaUpgrade();
     private ResourceLocation texture;

@@ -8,10 +8,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.*;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -26,6 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import totoro.unreality.Config;
 import totoro.unreality.Unreality;
+import totoro.unreality.common.entity.EntityExplosivePrimed;
 import totoro.unreality.common.entity.EntityPlasmaBolt;
 
 import javax.annotation.Nonnull;
@@ -54,21 +53,22 @@ public class BlockExplosive extends Block {
 
     public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
         if (!worldIn.isRemote) {
-            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(worldIn, (double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F), explosionIn.getExplosivePlacedBy());
+            EntityExplosivePrimed entitytntprimed = new EntityExplosivePrimed(worldIn,
+                    (double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F));
             entitytntprimed.setFuse(Config.EXPLOSIVE_FUSE / 2);
             worldIn.spawnEntityInWorld(entitytntprimed);
         }
     }
 
     public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
-        this.explode(worldIn, pos, state, null);
+        this.explode(worldIn, pos, state);
     }
 
-    public void explode(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase igniter) {
+    public void explode(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
             if (state.getValue(EXPLODE)) {
-                EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(worldIn,
-                        (double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F), igniter);
+                EntityExplosivePrimed entitytntprimed = new EntityExplosivePrimed(worldIn,
+                        (double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F));
                 entitytntprimed.setFuse(Config.EXPLOSIVE_FUSE);
                 worldIn.spawnEntityInWorld(entitytntprimed);
                 worldIn.playSound(null, entitytntprimed.posX, entitytntprimed.posY, entitytntprimed.posZ,
@@ -80,14 +80,14 @@ public class BlockExplosive extends Block {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
                                     EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side,
                                     float hitX, float hitY, float hitZ) {
-        this.explode(worldIn, pos, state.withProperty(EXPLODE, Boolean.TRUE), playerIn);
+        this.explode(worldIn, pos, state.withProperty(EXPLODE, Boolean.TRUE));
         worldIn.setBlockState(pos, net.minecraft.init.Blocks.AIR.getDefaultState(), 11);
         return true;
     }
 
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         if (!worldIn.isRemote && entityIn instanceof EntityPlasmaBolt) {
-            this.explode(worldIn, pos, worldIn.getBlockState(pos).withProperty(EXPLODE, Boolean.TRUE), null);
+            this.explode(worldIn, pos, worldIn.getBlockState(pos).withProperty(EXPLODE, Boolean.TRUE));
             worldIn.setBlockToAir(pos);
         }
     }

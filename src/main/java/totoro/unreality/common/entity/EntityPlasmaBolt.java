@@ -1,7 +1,6 @@
 package totoro.unreality.common.entity;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
