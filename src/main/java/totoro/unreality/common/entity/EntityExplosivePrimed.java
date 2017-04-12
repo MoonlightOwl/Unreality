@@ -6,7 +6,11 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import totoro.unreality.Config;
+import totoro.unreality.common.PlasmaExplosion;
+import totoro.unreality.util.Helper;
 
 import javax.annotation.Nonnull;
 
@@ -60,16 +64,13 @@ public class EntityExplosivePrimed extends Entity {
      * Called to update the entity's position/logic.
      */
     public void onUpdate() {
-        this.setRotation(this.rotationYaw + 2f, 0);
+        this.setRotation(this.rotationYaw + 3f, 0);
 
         --this.fuse;
 
         if (this.fuse <= 0) {
             this.setDead();
-
-            if (!this.worldObj.isRemote) {
-                this.explode();
-            }
+            this.explode();
         } else {
             this.handleWaterMovement();
             this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL,
@@ -77,9 +78,35 @@ public class EntityExplosivePrimed extends Entity {
         }
     }
 
+    private void scanForDetonable(BlockPos center, int radius) {
+        for (int x = center.getX() - radius; x < center.getX() + radius; x++) {
+            for (int y = center.getY() - radius; y < center.getY() + radius; y++) {
+                for (int z = center.getZ() - radius; z < center.getZ() + radius; z++) {
+                    if (x != center.getX() || y != center.getY() || z != center.getZ()) {
+                        BlockPos pos = new BlockPos(x, y, z);
+                        String blockname = this.worldObj.getBlockState(pos).getBlock()
+                                .getRegistryName().toString();
+                        if (!Helper.contains(Config.PLASMA_PERMEABLE_BLOCKS, blockname)) {
+                            if (Helper.contains(Config.PLASMA_EXPLOSIVE_BLOCKS, blockname)) {
+                                this.worldObj.destroyBlock(pos, false);
+                                PlasmaExplosion.bigExplode(this.worldObj,
+                                        x, y, z, Config.PLASMA_EXPLOSION_RADIUS);
+                            } else if (Helper.contains(Config.PLASMA_DESTRUCTIBLE_BLOCKS, blockname)) {
+                                this.worldObj.destroyBlock(pos, false);
+                                PlasmaExplosion.smallExplode(this.worldObj,
+                                        x, y, z, Config.PLASMA_EXPLOSION_RADIUS / 2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void explode() {
-        this.worldObj.createExplosion(this,
-                this.posX, this.posY + (double)(this.height / 16.0F), this.posZ, 4.0F, true);
+        double x = this.posX, y = this.posY + (double)(this.height / 16.0F), z = this.posZ;
+        PlasmaExplosion.bigExplode(this.worldObj, x, y, z, Config.EXPLOSIVE_RADIUS);
+        scanForDetonable(new BlockPos(x, y, z), Config.EXPLOSIVE_RADIUS);
     }
 
     /**
