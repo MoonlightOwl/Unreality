@@ -1,20 +1,20 @@
-package totoro.unreality.common.item;
+package totoro.unreality.common.block;
 
 import li.cil.oc.api.CreativeTab;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 
-public class Items {
-    private static ItemPlasmaUpgrade plasmaUpgrade;
+public class Blocks {
+    private static BlockExplosive explosive;
 
     public static void preInit() {
-        plasmaUpgrade = new ItemPlasmaUpgrade();
+        explosive = new BlockExplosive();
     }
 
     @SideOnly(Side.CLIENT)
-    public static void preInitClient() {
-        plasmaUpgrade.initModel();
+    public static void initClient() {
+        explosive.initModel();
     }
 
     public static void init() {
@@ -22,6 +22,6 @@ public class Items {
     }
 
     public static void postInit() {
-        plasmaUpgrade.setCreativeTab(CreativeTab.instance);
+        explosive.setCreativeTab(CreativeTab.instance);
     }
 }

@@ -19,6 +19,8 @@ public class Config {
     // Physics
     public static String[] PLASMA_PERMEABLE_BLOCKS, PLASMA_EXPLOSIVE_BLOCKS, PLASMA_DESTRUCTIBLE_BLOCKS;
     public static double PLASMA_EXPLOSION_RADIUS = 1;
+    public static int EXPLOSIVE_FUSE = 200;
+    public static int EXPLOSIVE_RADIUS = 3;
     // API
     public static double PLASMA_UPGRADE_FIRE_DELAY = 0.2;
 
@@ -64,7 +66,14 @@ public class Config {
 
         PLASMA_UPGRADE_FIRE_DELAY = config.get("plasma",
                 "fireDelay", 0.2,
-                "Cooldown after each shot (seconds).").getDouble();
+                "Cooldown after each shot (in seconds).").getDouble();
+
+        EXPLOSIVE_FUSE = config.getInt("fuse",
+                "explosive", 200, 0, Integer.MAX_VALUE,
+                "The time a fuse burns (in 0.1 seconds).");
+        EXPLOSIVE_RADIUS = config.getInt("radius",
+                "explosive", 3, 0, Integer.MAX_VALUE,
+                "The attack range: all explosive and destructable block inside will be destroyed.");
 
         if (config.hasChanged())
             config.save();

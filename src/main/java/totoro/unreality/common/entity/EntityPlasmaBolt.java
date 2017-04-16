@@ -1,7 +1,5 @@
 package totoro.unreality.common.entity;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -23,21 +21,6 @@ public class EntityPlasmaBolt extends EntityProjectile {
     public EntityPlasmaBolt(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
         super(worldIn, x, y, z, accelX, accelY, accelZ);
         this.setSize(0.3125F, 0.3125F);
-    }
-
-    private BlockPos scanForRobots(BlockPos center, int radius) {
-        for (int x = center.getX() - radius; x < center.getX() + radius; x++) {
-            for (int y = center.getY() - radius; y < center.getY() + radius; y++) {
-                for (int z = center.getZ() - radius; z < center.getZ() + radius; z++) {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    Block target = this.worldObj.getBlockState(pos).getBlock();
-                    if (target.getRegistryName().toString().equals("opencomputers:robot")) {
-                        return pos;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     @SuppressWarnings("ConstantConditions")

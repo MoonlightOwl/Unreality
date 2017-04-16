@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "explode=true": { "model": "unreality:explosive" },
+    "explode=false": { "model": "unreality:explosive" }
+  }
+}
